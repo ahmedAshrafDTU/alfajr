@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'app.dart';
+import 'core/state/app_mode_provider.dart';
+import 'core/state/profile_provider.dart';
 import 'core/config/app_config.dart';
 import 'core/storage/local_storage_service.dart';
 import 'features/groups/data/repositories/persistent_group_repository.dart';
@@ -60,14 +63,20 @@ void main() async {
   }
 
   runApp(
-    AlFajrApp(
-      userRepository: userRepository,
-      groupRepository: groupRepository,
-      historyRepository: historyRepository,
-      settingsRepository: settingsRepository,
-      wirdRepository: wirdRepository,
-      habitRepository: habitRepository,
-      callService: callService,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AppModeProvider()), // Keep for legacy if needed temporarily
+        ChangeNotifierProvider(create: (context) => ProfileProvider()),
+      ],
+      child: AlFajrApp(
+        userRepository: userRepository,
+        groupRepository: groupRepository,
+        historyRepository: historyRepository,
+        settingsRepository: settingsRepository,
+        wirdRepository: wirdRepository,
+        habitRepository: habitRepository,
+        callService: callService,
+      ),
     ),
   );
 }

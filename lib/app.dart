@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+import 'core/state/profile_provider.dart';
+import 'features/kids/screens/kids_home_screen.dart';
+import 'features/users/screens/profile_selection_screen.dart';
 import 'core/constants/app_strings.dart';
 import 'core/theme/app_theme.dart';
 import 'features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -86,15 +90,25 @@ class _AlFajrAppState extends State<AlFajrApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      home: MainNavigationShell(
-        engine: _engine,
-        userRepository: widget.userRepository,
-        groupRepository: widget.groupRepository,
-        historyRepository: widget.historyRepository,
-        settingsRepository: widget.settingsRepository,
-        wirdRepository: widget.wirdRepository,
-        habitRepository: widget.habitRepository,
-        onThemeChanged: (isDark) => setState(() => _isDarkMode = isDark),
+      home: Consumer<ProfileProvider>(
+        builder: (context, profileProvider, child) {
+          if (!profileProvider.hasProfiles) {
+            return const ProfileSelectionScreen();
+          }
+          if (profileProvider.isKidsMode) {
+            return const KidsHomeScreen();
+          }
+          return MainNavigationShell(
+            engine: _engine,
+            userRepository: widget.userRepository,
+            groupRepository: widget.groupRepository,
+            historyRepository: widget.historyRepository,
+            settingsRepository: widget.settingsRepository,
+            wirdRepository: widget.wirdRepository,
+            habitRepository: widget.habitRepository,
+            onThemeChanged: (isDark) => setState(() => _isDarkMode = isDark),
+          );
+        },
       ),
     );
   }
