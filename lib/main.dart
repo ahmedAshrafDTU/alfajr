@@ -21,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 1. Initialize Durable Storage Engine
-  final storageService = FileLocalStorageService();
+  final storageService = SharedPrefsLocalStorageService();
   await storageService.init();
 
   // 2. Initialize Persistent Repositories

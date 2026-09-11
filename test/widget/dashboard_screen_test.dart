@@ -32,12 +32,15 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    // Verify key UI elements render
-    expect(find.text('نظام الفجر للإيقاظ'), findsOneWidget);
+    expect(find.text('الرئيسية'), findsOneWidget);
+    expect(find.byIcon(Icons.menu_rounded), findsOneWidget);
+
+    // Verify Fajr Card is present
     expect(find.text('موعد الفجر القادم'), findsOneWidget);
-    expect(find.text('إحصائيات المتابعة اليومية'), findsOneWidget);
-    expect(find.text('بدء جلسة الإيقاظ'), findsOneWidget);
-    expect(find.text('إيقاف طارئ'), findsOneWidget);
+
+    // Verify Action buttons
+    expect(find.text('بدء المتابعة'), findsOneWidget);
+    expect(find.text('المراقبة'), findsOneWidget);
 
     engine.dispose();
   });

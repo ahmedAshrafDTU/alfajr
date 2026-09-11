@@ -146,87 +146,208 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
 
   @override
   Widget build(BuildContext context) {
+    // Only Dashboard and Ibadah in the main view
     final screens = [
       DashboardScreen(
         engine: widget.engine,
         userRepository: widget.userRepository,
         wirdRepository: widget.wirdRepository,
       ),
-      LiveMonitoringScreen(
-        engine: widget.engine,
-        userRepository: widget.userRepository,
-      ),
-      UsersListScreen(
-        userRepository: widget.userRepository,
-      ),
-      GroupsScreen(
-        groupRepository: widget.groupRepository,
-      ),
-      HistoryAnalyticsScreen(
-        historyRepository: widget.historyRepository,
-      ),
-      const ParentDashboardScreen(),
       WirdMainScreen(
         wirdRepository: widget.wirdRepository,
         habitRepository: widget.habitRepository,
       ),
-      SettingsScreen(
-        settingsRepository: widget.settingsRepository,
-        onThemeChanged: widget.onThemeChanged,
-      ),
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: screens,
+      drawer: AppDrawer(
+        engine: widget.engine,
+        userRepository: widget.userRepository,
+        groupRepository: widget.groupRepository,
+        historyRepository: widget.historyRepository,
+        settingsRepository: widget.settingsRepository,
+        onThemeChanged: widget.onThemeChanged,
+      ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0.0, 0.05),
+                end: Offset.zero,
+              ).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: screens[_currentIndex], // Key is needed for AnimatedSwitcher if they are same type, but they are different types here.
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
         onDestinationSelected: (idx) => setState(() => _currentIndex = idx),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined),
-            selectedIcon: Icon(Icons.dashboard_rounded),
-            label: AppStrings.navDashboard,
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home_rounded),
+            label: 'الرئيسية',
           ),
           NavigationDestination(
-            icon: Icon(Icons.phone_in_talk_outlined),
-            selectedIcon: Icon(Icons.phone_in_talk_rounded),
-            label: AppStrings.navLiveMonitoring,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.people_outline),
-            selectedIcon: Icon(Icons.people_rounded),
-            label: AppStrings.navUsers,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.groups_outlined),
-            selectedIcon: Icon(Icons.groups_rounded),
-            label: AppStrings.navGroups,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart_rounded),
-            label: AppStrings.navHistory,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.family_restroom_outlined),
-            selectedIcon: Icon(Icons.family_restroom_rounded),
-            label: 'الأسرة',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.mosque_outlined),
-            selectedIcon: Icon(Icons.mosque_rounded),
-            label: 'الأوراد',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings_rounded),
-            label: AppStrings.navSettings,
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book_rounded),
+            label: 'عبادتي',
           ),
         ],
       ),
+    );
+  }
+}
+
+class AppDrawer extends StatelessWidget {
+  final WakeUpEngine engine;
+  final UserRepository userRepository;
+  final GroupRepository groupRepository;
+  final HistoryRepository historyRepository;
+  final SettingsRepository settingsRepository;
+  final Function(bool isDark) onThemeChanged;
+
+  const AppDrawer({
+    super.key,
+    required this.engine,
+    required this.userRepository,
+    required this.groupRepository,
+    required this.historyRepository,
+    required this.settingsRepository,
+    required this.onThemeChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Drawer(
+      child: Container(
+        color: theme.scaffoldBackgroundColor,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isDark 
+                      ? [const Color(0xFF0C4A34), const Color(0xFF072D20)]
+                      : [const Color(0xFF0C4A34), const Color(0xFF137351)],
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const Icon(Icons.mosque, size: 48, color: Colors.white),
+                  const SizedBox(height: 12),
+                  Text(
+                    'الفجر',
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'نظام إسلامي متكامل',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.phone_in_talk_rounded,
+              title: AppStrings.navLiveMonitoring,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => LiveMonitoringScreen(
+                  engine: engine,
+                  userRepository: userRepository,
+                )));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.people_rounded,
+              title: AppStrings.navUsers,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => UsersListScreen(
+                  userRepository: userRepository,
+                )));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.groups_rounded,
+              title: AppStrings.navGroups,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => GroupsScreen(
+                  groupRepository: groupRepository,
+                )));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.bar_chart_rounded,
+              title: AppStrings.navHistory,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryAnalyticsScreen(
+                  historyRepository: historyRepository,
+                )));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.family_restroom_rounded,
+              title: 'الأسرة والأطفال',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentDashboardScreen()));
+              },
+            ),
+            const Divider(),
+            _buildDrawerItem(
+              context,
+              icon: Icons.settings_rounded,
+              title: AppStrings.navSettings,
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => SettingsScreen(
+                  settingsRepository: settingsRepository,
+                  onThemeChanged: onThemeChanged,
+                )));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(BuildContext context, {required IconData icon, required String title, required VoidCallback onTap}) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).primaryColor),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      onTap: onTap,
     );
   }
 }

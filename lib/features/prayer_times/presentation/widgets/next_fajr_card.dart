@@ -21,7 +21,7 @@ class NextFajrCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: AppColors.fajrGradient,
+        gradient: AppColors.premiumGreenGradient,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(

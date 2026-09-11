@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Abstract key-value and document storage interface.
 abstract class LocalStorageService {
@@ -14,55 +14,28 @@ abstract class LocalStorageService {
   Future<void> clear();
 }
 
-/// Robust JSON File-based Local Storage implementation.
-/// Uses in-memory cache with async file persistence for high performance and durability.
-class FileLocalStorageService implements LocalStorageService {
-  final String storageDirectoryPath;
-  final Map<String, String> _memoryCache = {};
+/// Robust JSON Local Storage implementation using SharedPreferences (Web/Mobile compatible).
+class SharedPrefsLocalStorageService implements LocalStorageService {
+  late SharedPreferences _prefs;
   bool _initialized = false;
-
-  FileLocalStorageService({this.storageDirectoryPath = '.alfager_data'});
 
   @override
   Future<void> init() async {
     if (_initialized) return;
-    try {
-      final dir = Directory(storageDirectoryPath);
-      if (!await dir.exists()) {
-        await dir.create(recursive: true);
-      } else {
-        // Preload files into memory cache
-        await for (final entity in dir.list()) {
-          if (entity is File && entity.path.endsWith('.json')) {
-            final fileName = entity.uri.pathSegments.last;
-            final key = fileName.replaceAll('.json', '');
-            final content = await entity.readAsString();
-            _memoryCache[key] = content;
-          }
-        }
-      }
-    } catch (_) {
-      // Gracefully fall back to in-memory mode if filesystem permissions are restricted
-    }
+    _prefs = await SharedPreferences.getInstance();
     _initialized = true;
   }
 
   @override
   Future<String?> readString(String key) async {
     await init();
-    return _memoryCache[key];
+    return _prefs.getString(key);
   }
 
   @override
   Future<void> writeString(String key, String value) async {
     await init();
-    _memoryCache[key] = value;
-    try {
-      final file = File('$storageDirectoryPath/$key.json');
-      await file.writeAsString(value, flush: true);
-    } catch (_) {
-      // Maintained in memory cache
-    }
+    await _prefs.setString(key, value);
   }
 
   @override
@@ -102,24 +75,13 @@ class FileLocalStorageService implements LocalStorageService {
   @override
   Future<void> remove(String key) async {
     await init();
-    _memoryCache.remove(key);
-    try {
-      final file = File('$storageDirectoryPath/$key.json');
-      if (await file.exists()) {
-        await file.delete();
-      }
-    } catch (_) {}
+    await _prefs.remove(key);
   }
 
   @override
   Future<void> clear() async {
     await init();
-    _memoryCache.clear();
-    try {
-      final dir = Directory(storageDirectoryPath);
-      if (await dir.exists()) {
-        await dir.delete(recursive: true);
-      }
-    } catch (_) {}
+    await _prefs.clear();
   }
 }
+

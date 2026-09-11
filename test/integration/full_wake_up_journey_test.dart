@@ -16,6 +16,7 @@ import 'package:alfager/features/wake_up/domain/services/call_service.dart';
 import 'package:alfager/features/wake_up/domain/services/mock_call_service.dart';
 import 'package:alfager/features/wake_up/domain/services/twilio_call_service.dart';
 import 'package:alfager/features/wake_up/domain/services/wake_up_engine.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Full Wake-Up Journey Integration Tests', () {
@@ -26,9 +27,8 @@ void main() {
     late PersistentSettingsRepository settingsRepo;
 
     setUp(() async {
-      storage = FileLocalStorageService(
-        storageDirectoryPath: '.test_data_${DateTime.now().millisecondsSinceEpoch}',
-      );
+      SharedPreferences.setMockInitialValues({});
+      storage = SharedPrefsLocalStorageService();
       await storage.init();
       userRepo = PersistentUserRepository(storageService: storage);
       groupRepo = PersistentGroupRepository(storageService: storage);

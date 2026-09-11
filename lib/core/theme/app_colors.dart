@@ -1,54 +1,62 @@
 import 'package:flutter/material.dart';
 
-/// Curated color palette for Al-Fajr application.
+/// Premium Islamic Color Palette for Al-Fajr application.
 class AppColors {
-  // Emerald Islamic Primary
-  static const Color primary = Color(0xFF0D5C3A);
-  static const Color primaryLight = Color(0xFF168052);
-  static const Color primaryDark = Color(0xFF073823);
-  static const Color primaryAccent = Color(0xFF10B981);
+  // Primary (Deep Islamic Green)
+  static const Color primary = Color(0xFF0C4A34); // Deep Emerald
+  static const Color primaryLight = Color(0xFF137351);
+  static const Color primaryDark = Color(0xFF072D20);
+  static const Color primaryAccent = Color(0xFF0F9B6E);
 
-  // Gold / Amber Accent
-  static const Color gold = Color(0xFFD4AF37);
-  static const Color goldLight = Color(0xFFF3E5AB);
-  static const Color goldDark = Color(0xFF997A15);
-  static const Color amber = Color(0xFFF59E0B);
+  // Secondary (Warm Gold & Soft Sand)
+  static const Color secondary = Color(0xFFD4AF37); // Warm Gold
+  static const Color secondaryLight = Color(0xFFE5C86B);
+  static const Color secondaryDark = Color(0xFF997A15);
+  static const Color sand = Color(0xFFEBE6D6); // Soft Sand
 
-  // Status Colors
-  static const Color statusPrayed = Color(0xFF10B981); // Green
-  static const Color statusAwake = Color(0xFFF59E0B); // Amber / Yellow
-  static const Color statusCalling = Color(0xFF3B82F6); // Blue
-  static const Color statusNoAnswer = Color(0xFFEF4444); // Red
-  static const Color statusPending = Color(0xFF6B7280); // Slate Gray
-  static const Color statusSnoozed = Color(0xFF8B5CF6); // Purple
-  static const Color statusOptedOut = Color(0xFF9CA3AF); // Muted Gray
-
-  // Dark Theme Backgrounds
-  static const Color darkBackground = Color(0xFF0F172A); // Slate 900
-  static const Color darkSurface = Color(0xFF1E293B); // Slate 800
-  static const Color darkSurfaceElevated = Color(0xFF334155); // Slate 700
-  static const Color darkBorder = Color(0xFF334155);
-
-  // Light Theme Backgrounds
-  static const Color lightBackground = Color(0xFFF8FAFC); // Slate 50
+  // Background & Surface
+  static const Color lightBackground = Color(0xFFFBFBF9); // Cream / Off White
   static const Color lightSurface = Color(0xFFFFFFFF);
-  static const Color lightSurfaceElevated = Color(0xFFF1F5F9);
-  static const Color lightBorder = Color(0xFFE2E8F0);
+  static const Color lightBorder = Color(0xFFE5E5E0);
 
-  // Text Colors
-  static const Color textLightPrimary = Color(0xFF0F172A);
-  static const Color textLightSecondary = Color(0xFF64748B);
-  static const Color textDarkPrimary = Color(0xFFF8FAFC);
-  static const Color textDarkSecondary = Color(0xFF94A3B8);
+  static const Color darkBackground = Color(0xFF0F1A15); // Deep Charcoal Green
+  static const Color darkSurface = Color(0xFF16261E); // Elevated Dark
+  static const Color darkBorder = Color(0xFF233D31);
+
+  // Semantic & Status Colors
+  static const Color success = Color(0xFF10B981);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFEF4444);
+  static const Color info = Color(0xFF3B82F6);
+  
+  static const Color statusPrayed = success;
+  static const Color statusAwake = warning;
+  static const Color statusCalling = info;
+  static const Color statusNoAnswer = error;
+
+  // Legacy / Backward Compatibility Colors
+  static const Color amber = warning;
+  static const Color gold = secondary;
+  static const Color goldLight = secondaryLight;
+  static const Color statusSnoozed = Color(0xFF8B5CF6);
+  static const Color statusPending = Color(0xFF6B7280);
+  static const Color statusOptedOut = Color(0xFF9CA3AF);
+
+  // Typography
+  static const Color textLightPrimary = Color(0xFF1A1A1A);
+  static const Color textLightSecondary = Color(0xFF6B7280);
+  
+  static const Color textDarkPrimary = Color(0xFFF3F4F6);
+  static const Color textDarkSecondary = Color(0xFF9CA3AF);
 
   // Gradients
-  static const LinearGradient fajrGradient = LinearGradient(
+  static const LinearGradient premiumGreenGradient = LinearGradient(
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
     colors: [
-      Color(0xFF0A3A24),
-      Color(0xFF14532D),
-      Color(0xFF064E3B),
+      Color(0xFF093626),
+      Color(0xFF0C4A34),
+      Color(0xFF137351),
     ],
   );
 
@@ -56,17 +64,8 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xFFEAB308),
-      Color(0xFFD97706),
-    ],
-  );
-
-  static const LinearGradient cardGradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF1E293B),
-      Color(0xFF0F172A),
+      Color(0xFFE5C86B),
+      Color(0xFFD4AF37),
     ],
   );
 }
