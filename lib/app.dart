@@ -14,6 +14,7 @@ import 'features/history_analytics/presentation/screens/history_analytics_screen
 import 'features/settings/data/repositories/settings_repository.dart';
 import 'features/settings/presentation/screens/settings_screen.dart';
 import 'features/users/data/repositories/user_repository.dart';
+import 'features/dashboard/presentation/screens/parent_dashboard_screen.dart';
 import 'features/users/presentation/screens/users_list_screen.dart';
 import 'features/wake_up/domain/services/call_service.dart';
 import 'features/wake_up/domain/services/wake_up_engine.dart';
@@ -164,6 +165,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
       HistoryAnalyticsScreen(
         historyRepository: widget.historyRepository,
       ),
+      const ParentDashboardScreen(),
       WirdMainScreen(
         wirdRepository: widget.wirdRepository,
         habitRepository: widget.habitRepository,
@@ -207,6 +209,11 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             icon: Icon(Icons.bar_chart_outlined),
             selectedIcon: Icon(Icons.bar_chart_rounded),
             label: AppStrings.navHistory,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.family_restroom_outlined),
+            selectedIcon: Icon(Icons.family_restroom_rounded),
+            label: 'الأسرة',
           ),
           NavigationDestination(
             icon: Icon(Icons.mosque_outlined),
