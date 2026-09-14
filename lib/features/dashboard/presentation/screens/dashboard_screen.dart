@@ -18,12 +18,14 @@ class DashboardScreen extends StatefulWidget {
   final WakeUpEngine engine;
   final UserRepository userRepository;
   final WirdRepository? wirdRepository;
+  final ValueChanged<int>? onNavigate;
 
   const DashboardScreen({
     super.key,
     required this.engine,
     required this.userRepository,
     this.wirdRepository,
+    this.onNavigate,
   });
 
   @override
@@ -121,6 +123,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ],
         ),
         actions: [
+          PopupMenuButton<int>(
+            tooltip: 'المزيد',
+            icon: const Icon(Icons.grid_view_rounded),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            offset: const Offset(0, 48),
+            onSelected: widget.onNavigate,
+            itemBuilder: (context) => const [
+              PopupMenuItem(value: 5, child: ListTile(
+                leading: Icon(Icons.family_restroom_rounded),
+                title: Text('لوحة الأسرة'), contentPadding: EdgeInsets.zero,
+              )),
+              PopupMenuItem(value: 6, child: ListTile(
+                leading: Icon(Icons.mosque_rounded),
+                title: Text('الأوراد والعادات'), contentPadding: EdgeInsets.zero,
+              )),
+              PopupMenuItem(value: 7, child: ListTile(
+                leading: Icon(Icons.settings_rounded),
+                title: Text('الإعدادات'), contentPadding: EdgeInsets.zero,
+              )),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.remove_red_eye_rounded),
             tooltip: 'المتابعة الحية',
@@ -194,13 +217,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
               // 3. Section Title: KPI Metrics
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'إحصائيات المتابعة اليومية',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const Expanded(
+                    child: Text(
+                      'إحصائيات المتابعة اليومية',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                    ),
                   ),
-                  TextButton.icon(
+                  TextButton(
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
@@ -211,8 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 14),
-                    label: const Text('عرض المتابعة الحية'),
+                    child: const Text('عرض الكل'),
                   ),
                 ],
               ),
@@ -225,7 +248,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisSpacing: 10,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 1.5,
+                childAspectRatio: 1.18,
                 children: [
                   MetricSummaryCard(
                     title: AppStrings.totalUsers,

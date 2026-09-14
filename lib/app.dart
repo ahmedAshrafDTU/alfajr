@@ -144,6 +144,8 @@ class MainNavigationShell extends StatefulWidget {
 class _MainNavigationShellState extends State<MainNavigationShell> {
   int _currentIndex = 0;
 
+  void _selectSection(int index) => setState(() => _currentIndex = index);
+
   @override
   Widget build(BuildContext context) {
     final screens = [
@@ -151,6 +153,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         engine: widget.engine,
         userRepository: widget.userRepository,
         wirdRepository: widget.wirdRepository,
+        onNavigate: _selectSection,
       ),
       LiveMonitoringScreen(
         engine: widget.engine,
@@ -182,8 +185,21 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         children: screens,
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (idx) => setState(() => _currentIndex = idx),
+        height: 68,
+        elevation: 8,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        indicatorColor: Theme.of(context).colorScheme.secondary.withOpacity(.22),
+        labelTextStyle: MaterialStateProperty.resolveWith((states) {
+          return TextStyle(
+            fontSize: 10,
+            height: 1.1,
+            fontWeight: states.contains(MaterialState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+          );
+        }),
+        selectedIndex: _currentIndex < 5 ? _currentIndex : 0,
+        onDestinationSelected: _selectSection,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.dashboard_outlined),
@@ -193,37 +209,22 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
           NavigationDestination(
             icon: Icon(Icons.phone_in_talk_outlined),
             selectedIcon: Icon(Icons.phone_in_talk_rounded),
-            label: AppStrings.navLiveMonitoring,
+            label: 'مباشر',
           ),
           NavigationDestination(
             icon: Icon(Icons.people_outline),
             selectedIcon: Icon(Icons.people_rounded),
-            label: AppStrings.navUsers,
+            label: 'الأفراد',
           ),
           NavigationDestination(
             icon: Icon(Icons.groups_outlined),
             selectedIcon: Icon(Icons.groups_rounded),
-            label: AppStrings.navGroups,
+            label: 'المجموعات',
           ),
           NavigationDestination(
             icon: Icon(Icons.bar_chart_outlined),
             selectedIcon: Icon(Icons.bar_chart_rounded),
-            label: AppStrings.navHistory,
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.family_restroom_outlined),
-            selectedIcon: Icon(Icons.family_restroom_rounded),
-            label: 'الأسرة',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.mosque_outlined),
-            selectedIcon: Icon(Icons.mosque_rounded),
-            label: 'الأوراد',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.settings_outlined),
-            selectedIcon: Icon(Icons.settings_rounded),
-            label: AppStrings.navSettings,
+            label: 'السجل',
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:alfager/features/wird/domain/entities/habit.dart';
 import 'package:alfager/features/wird/domain/entities/wird.dart';
 import 'package:alfager/features/wird/domain/entities/wird_completion.dart';
+import 'package:alfager/features/wird/domain/entities/wird_item.dart';
 import 'package:alfager/features/wird/domain/services/habit_engine.dart';
 import 'package:alfager/features/wird/domain/repositories/wird_repository.dart';
 import 'package:alfager/features/wird/domain/repositories/habit_repository.dart';
@@ -24,13 +25,13 @@ class MockWirdRepository implements WirdRepository {
   @override
   Future<Wird?> getWirdById(String id) async => wird;
   @override
-  Future<List<dynamic>> getWirdItems(String wirdId) async => [];
+  Future<List<WirdItem>> getWirdItems(String wirdId) async => [];
   @override
   Future<void> saveCompletion(WirdCompletion completion) async {}
   @override
   Future<void> saveWird(Wird wird) async {}
   @override
-  Future<void> saveWirdItems(String wirdId, List<dynamic> items) async {}
+  Future<void> saveWirdItems(String wirdId, List<WirdItem> items) async {}
   @override
   Future<void> deleteWird(String id) async {}
 }
