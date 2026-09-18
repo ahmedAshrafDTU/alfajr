@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreWirdRequest extends FormRequest
+class StoreUserDeviceRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
         return true;
@@ -19,11 +23,9 @@ class StoreWirdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date'           => 'required|date|date_format:Y-m-d|before_or_equal:today',
-            'quran_pages'    => 'nullable|integer|min:0',
-            'dhikr_morning'  => 'nullable|boolean',
-            'dhikr_evening'  => 'nullable|boolean',
-            'sunnah_prayers' => 'nullable|integer|min:0|max:12',
+            'fcm_token'   => 'required|string',
+            'device_id'   => 'nullable|string',
+            'device_type' => 'nullable|string|in:android,ios,web',
         ];
     }
 }

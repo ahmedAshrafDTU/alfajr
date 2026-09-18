@@ -3,29 +3,30 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\WakeUpHistory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class WakeUpHistoryApiTest extends TestCase
+class WakeUpHistoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_user_can_log_wake_up_history()
+    public function test_user_can_log_wake_up()
     {
         $user = User::factory()->create();
 
         $response = $this->actingAs($user, 'sanctum')->postJson('/api/wake-up-histories', [
-            'date' => '2026-09-11',
-            'wake_up_time' => '04:30:00',
+            'date' => now()->toDateString(),
+            'wake_up_time' => '04:30',
             'status' => 'on_time',
             'fajr_prayer_status' => 'jamaah',
-            'notes' => 'Alhamdulillah',
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)
+            ->assertJsonPath('data.status', 'on_time');
+
         $this->assertDatabaseHas('wake_up_histories', [
             'user_id' => $user->id,
-            'date' => '2026-09-11 00:00:00',
             'status' => 'on_time',
         ]);
     }

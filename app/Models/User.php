@@ -46,6 +46,11 @@ class User extends Authenticatable
         return $this->hasMany(WakeUpHistory::class);
     }
 
+    public function userDevices()
+    {
+        return $this->hasMany(UserDevice::class);
+    }
+
     public function wirds()
     {
         return $this->hasMany(Wird::class);

@@ -3,57 +3,93 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
+use App\Http\Requests\AddGroupMemberRequest;
+use App\Http\Resources\GroupResource;
 use App\Models\Group;
-use App\Models\GroupMember;
+use App\Services\GroupService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
+    protected GroupService $groupService;
+
+    public function __construct(GroupService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
+
     public function index(Request $request)
     {
-        // Get groups where user is a member or admin
-        $groups = Group::whereHas('members', function($q) use ($request) {
-            $q->where('user_id', $request->user()->id);
-        })->orWhere('admin_id', $request->user()->id)->with('admin')->get();
-
-        return response()->json($groups);
+        $groups = $request->user()->groups()->with('members')->get();
+        return $this->successResponse(
+            GroupResource::collection($groups),
+            'Groups retrieved successfully'
+        );
     }
 
     public function store(StoreGroupRequest $request)
     {
-        DB::beginTransaction();
-        try {
-            $group = Group::create([
-                'name' => $request->name,
-                'description' => $request->description,
-                'admin_id' => $request->user()->id,
-            ]);
-
-            // Add creator as admin member
-            GroupMember::create([
-                'group_id' => $group->id,
-                'user_id' => $request->user()->id,
-                'role' => 'admin',
-                'status' => 'active',
-            ]);
-
-            DB::commit();
-            return response()->json($group->load('members.user'), 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Failed to create group.'], 500);
-        }
+        $group = $this->groupService->createGroup($request->user(), $request->validated());
+        
+        return $this->successResponse(
+            new GroupResource($group),
+            'Group created successfully',
+            201
+        );
     }
 
     public function show(Request $request, Group $group)
     {
-        // Check if user is member
-        $isMember = $group->members()->where('user_id', $request->user()->id)->exists();
-        if ($group->admin_id !== $request->user()->id && !$isMember) {
-            return response()->json(['error' => 'Unauthorized'], 403);
+        if ($request->user()->cannot('view', $group)) {
+            return $this->errorResponse('Unauthorized', 403);
         }
+        $group->load('members');
+        return $this->successResponse(
+            new GroupResource($group),
+            'Group retrieved successfully'
+        );
+    }
 
-        return response()->json($group->load(['members.user', 'admin']));
+    public function update(UpdateGroupRequest $request, Group $group)
+    {
+        if ($request->user()->cannot('update', $group)) {
+            return $this->errorResponse('Unauthorized', 403);
+        }
+        $group = $this->groupService->updateGroup($group, $request->validated());
+        
+        return $this->successResponse(
+            new GroupResource($group),
+            'Group updated successfully'
+        );
+    }
+
+    public function destroy(Request $request, Group $group)
+    {
+        if ($request->user()->cannot('delete', $group)) {
+            return $this->errorResponse('Unauthorized', 403);
+        }
+        $this->groupService->deleteGroup($group);
+        return $this->successResponse(null, 'Group deleted successfully');
+    }
+
+    public function addMember(AddGroupMemberRequest $request, Group $group)
+    {
+        if ($request->user()->cannot('manageMembers', $group)) {
+            return $this->errorResponse('Unauthorized', 403);
+        }
+        $user = \App\Models\User::findOrFail($request->user_id);
+        $this->groupService->addMember($group, $user);
+        
+        return $this->successResponse(
+            new GroupResource($group->load('members')),
+            'Member added successfully'
+        );
+    }
+
+    public function leave(Request $request, Group $group)
+    {
+        $this->groupService->removeMember($group, $request->user());
+        return $this->successResponse(null, 'Left group successfully');
     }
 }
