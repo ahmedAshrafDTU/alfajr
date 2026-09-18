@@ -145,6 +145,8 @@ class MainNavigationShell extends StatefulWidget {
 class _MainNavigationShellState extends State<MainNavigationShell> {
   int _currentIndex = 0;
 
+  void _selectSection(int index) => setState(() => _currentIndex = index);
+
   @override
   Widget build(BuildContext context) {
     // Only Dashboard and Ibadah in the main view
@@ -153,6 +155,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         engine: widget.engine,
         userRepository: widget.userRepository,
         wirdRepository: widget.wirdRepository,
+        onNavigate: _selectSection,
       ),
       WirdMainScreen(
         wirdRepository: widget.wirdRepository,
@@ -186,8 +189,21 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         child: screens[_currentIndex], // Key is needed for AnimatedSwitcher if they are same type, but they are different types here.
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: (idx) => setState(() => _currentIndex = idx),
+        height: 68,
+        elevation: 8,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        indicatorColor: Theme.of(context).colorScheme.secondary.withOpacity(.22),
+        labelTextStyle: MaterialStateProperty.resolveWith((states) {
+          return TextStyle(
+            fontSize: 10,
+            height: 1.1,
+            fontWeight: states.contains(MaterialState.selected)
+                ? FontWeight.w700
+                : FontWeight.w500,
+          );
+        }),
+        selectedIndex: _currentIndex < 5 ? _currentIndex : 0,
+        onDestinationSelected: _selectSection,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
@@ -195,9 +211,30 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
             label: 'الرئيسية',
           ),
           NavigationDestination(
+<<<<<<< HEAD
             icon: Icon(Icons.menu_book_outlined),
             selectedIcon: Icon(Icons.menu_book_rounded),
             label: 'عبادتي',
+=======
+            icon: Icon(Icons.phone_in_talk_outlined),
+            selectedIcon: Icon(Icons.phone_in_talk_rounded),
+            label: 'مباشر',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.people_outline),
+            selectedIcon: Icon(Icons.people_rounded),
+            label: 'الأفراد',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.groups_outlined),
+            selectedIcon: Icon(Icons.groups_rounded),
+            label: 'المجموعات',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.bar_chart_outlined),
+            selectedIcon: Icon(Icons.bar_chart_rounded),
+            label: 'السجل',
+>>>>>>> 19042eda4d110855f2a0a6ea22a93e533b2c6bf6
           ),
         ],
       ),

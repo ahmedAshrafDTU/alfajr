@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:alfager/features/wird/domain/entities/habit.dart';
 import 'package:alfager/features/wird/domain/entities/wird.dart';
 import 'package:alfager/features/wird/domain/entities/wird_completion.dart';
+import 'package:alfager/features/wird/domain/entities/wird_item.dart';
 import 'package:alfager/features/wird/domain/services/habit_engine.dart';
 import 'package:alfager/features/wird/domain/repositories/wird_repository.dart';
 import 'package:alfager/features/wird/domain/repositories/habit_repository.dart';
