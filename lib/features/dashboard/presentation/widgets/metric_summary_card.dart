@@ -25,7 +25,7 @@ class MetricSummaryCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,30 +45,32 @@ class MetricSummaryCard extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: TextStyle(
-                        fontSize: 11,
+                      fontSize: 10,
                         color: color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                 ],
               ),
-              const SizedBox(height: 12),
+              const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     value,
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: 19,
                       fontWeight: FontWeight.w800,
                       color: color,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 1),
                   Text(
                     title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white70

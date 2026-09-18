@@ -19,7 +19,7 @@ class NextFajrCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: AppColors.premiumGreenGradient,
         borderRadius: BorderRadius.circular(24),
@@ -37,7 +37,7 @@ class NextFajrCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Expanded(child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
@@ -52,7 +52,7 @@ class NextFajrCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Column(
+                  Expanded(child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
@@ -72,9 +72,9 @@ class NextFajrCard extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  )),
                 ],
-              ),
+              )),
               if (onToggleManual != null)
                 IconButton(
                   onPressed: onToggleManual,
@@ -87,9 +87,12 @@ class NextFajrCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 18),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            runAlignment: WrapAlignment.end,
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.end,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

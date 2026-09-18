@@ -175,7 +175,7 @@ class PersistentWirdRepository implements WirdRepository {
       type: WirdType.values[json['type'] ?? 0],
       target: json['target'] ?? 1,
       unit: json['unit'] ?? '',
-      icon: json['iconCodePoint'] != null ? IconData(json['iconCodePoint'], fontFamily: 'MaterialIcons') : null,
+      icon: _iconFromCodePoint(json['iconCodePoint'] as int?),
       color: json['colorValue'] != null ? Color(json['colorValue']) : null,
       priority: json['priority'] ?? 0,
       isActive: json['isActive'] ?? true,
@@ -189,6 +189,17 @@ class PersistentWirdRepository implements WirdRepository {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );
+  }
+
+  static IconData? _iconFromCodePoint(int? codePoint) {
+    if (codePoint == null) return null;
+    const icons = <int, IconData>{
+      0xe0cd: Icons.alarm,
+      0xe152: Icons.book,
+      0xe59c: Icons.star,
+      0xe1bf: Icons.favorite,
+    };
+    return icons[codePoint];
   }
 
   Map<String, dynamic> _wirdItemToJson(WirdItem item) {
