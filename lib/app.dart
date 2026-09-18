@@ -16,6 +16,7 @@ import 'features/settings/presentation/screens/settings_screen.dart';
 import 'features/users/data/repositories/user_repository.dart';
 import 'features/dashboard/presentation/screens/parent_dashboard_screen.dart';
 import 'features/users/presentation/screens/users_list_screen.dart';
+import 'features/games/presentation/screens/adults_games_dashboard.dart';
 import 'features/wake_up/domain/services/call_service.dart';
 import 'features/wake_up/domain/services/wake_up_engine.dart';
 import 'features/wake_up/presentation/screens/live_monitoring_screen.dart';
@@ -317,6 +318,15 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const ParentDashboardScreen()));
+              },
+            ),
+            _buildDrawerItem(
+              context,
+              icon: Icons.videogame_asset_rounded,
+              title: 'الألعاب التثقيفية',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AdultsGamesDashboard()));
               },
             ),
             const Divider(),
